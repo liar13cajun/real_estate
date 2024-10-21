@@ -4,7 +4,7 @@ format: html
 editor: visual
 ---
 
-## Real Estate SA (12 MAY 2024)
+## Real Estate SA (Q2 2024)
 
 From ABS Data, use SF and other to make analysis
 
@@ -25,6 +25,11 @@ library(sf)
 
 You can add options to executable code like this
 
+From Data SA \
+<https://data.sa.gov.au/data/dataset/metro-median-house-sales>
+
+<https://www.valuergeneral.sa.gov.au/News-and-Publications/publisheddataandstatistics>
+
 ```{r}
 AUS_pc_shp <- read_sf("D:/finance/real_estate/SAL_2021_AUST_GDA2020_SHP","SAL_2021_AUST_GDA2020")
 AUS_pc_shp$SAL_NAME21 <- tolower(AUS_pc_shp$SAL_NAME21)
@@ -38,7 +43,7 @@ AUS_pc_shp <- AUS_pc_shp %>% filter(STE_NAME21 == "South Australia")
 ```
 
 ```{r}
-df <- read_excel("D:/finance/real_estate/lsg_stats_2024_q1.xlsx")
+df <- read_excel("D:/finance/real_estate/lsg_stats_2024_q3.xlsx")
 df$PostCode <- as.character(df$PostCode)
 colnames(df)[6] <- "median_value"
 df$Suburb <- tolower(df$Suburb)
@@ -54,30 +59,43 @@ map_data2 <- AUS_pc_shp %>%  inner_join(df, by = c('SAL_NAME21' = 'Suburb'))
 
 ```
 
+```{r}
+value_interested <- 850000
+```
+
 ```{r fig.height=15, fig.width=15}
 
 ggplot() + 
-  geom_sf(data = map_data2, aes(fill = median_value < 500000), color = "black")+theme_bw()+theme(
+  geom_sf(data = map_data2, aes(fill = median_value < value_interested), color = "black")+theme_bw()+theme(
     panel.grid.major = element_blank())
+```
+
+```{r}
+#count number of suburb below value interested
+d <- df$median_value
+d <- d[!is.na(d)]
+c <- which(d <= value_interested)
+length(c)
+
 ```
 
 ```{r fig.height=15, fig.width=15}
 # median sale price last quarter
 ggplot() + 
-  geom_sf(data = map_data2, aes(fill = median_value < 700000), color = "black")+theme_bw()+theme(
+  geom_sf(data = map_data2, aes(fill = median_value < value_interested), color = "black")+theme_bw()+theme(
     panel.grid.major = element_blank()) + coord_sf(xlim = c(138.45,138.65),ylim=c(-34.951,-35.169)) +geom_sf_text(data = map_data2, aes(label = median_value), size=4)
 ```
 
 ```{r fig.height=15, fig.width=15}
 # median sale price last quarter
 ggplot() + 
-  geom_sf(data = map_data2, aes(fill = median_value < 700000), color = "black")+theme_bw()+theme(
+  geom_sf(data = map_data2, aes(fill = median_value < value_interested), color = "black")+theme_bw()+theme(
     panel.grid.major = element_blank()) + coord_sf(xlim = c(138.45,138.65),ylim=c(-34.951,-35.169)) +geom_sf_text(data = map_data2, aes(label = SAL_NAME21), size=4)
 ```
 
 ```{r fig.height=20, fig.width=20}
 # median sale price last quarter
 ggplot() + 
-  geom_sf(data = map_data2, aes(fill = median_value < 700000), color = "black")+theme_bw()+theme(
+  geom_sf(data = map_data2, aes(fill = median_value < value_interested), color = "black")+theme_bw()+theme(
     panel.grid.major = element_blank()) + coord_sf(xlim = c(138.46,138.65),ylim=c(-34.97,-35.169)) +geom_sf_text(data = map_data2, aes(label = SAL_NAME21), size=4)
 ```
