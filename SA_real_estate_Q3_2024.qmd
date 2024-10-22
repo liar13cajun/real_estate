@@ -4,7 +4,7 @@ format: html
 editor: visual
 ---
 
-## Real Estate SA (Q2 2024)
+## Real Estate SA (Q3 2024)
 
 From ABS Data, use SF and other to make analysis
 
@@ -25,7 +25,7 @@ library(sf)
 
 You can add options to executable code like this
 
-From Data SA \
+From Data SA\
 <https://data.sa.gov.au/data/dataset/metro-median-house-sales>
 
 <https://www.valuergeneral.sa.gov.au/News-and-Publications/publisheddataandstatistics>
@@ -41,6 +41,8 @@ AUS_pc_shp$SAL_NAME21 <- gsub("\\s*\\([^\\)]+\\)","",as.character(AUS_pc_shp$SAL
 AUS_pc_shp <- AUS_pc_shp %>% filter(STE_NAME21 == "South Australia")
 
 ```
+
+Need to add postcode back to the lsg excel
 
 ```{r}
 df <- read_excel("D:/finance/real_estate/lsg_stats_2024_q3.xlsx")
