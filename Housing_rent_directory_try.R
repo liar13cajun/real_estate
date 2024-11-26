@@ -10,6 +10,8 @@ df_library <- read_excel(rent_library_path, sheet = "directory_try")
 # Ensure the columns `Name` and `Quarter` exist and extract them
 file_paths <- df_library$Name
 quarters <- df_library$Quarter
+skips <- df_library$Skip
+sheet <- df_library$Sheet
 
 # Load the column renaming map
 df_col_name <- read_excel(rent_library_path, sheet = "rename_2011")
@@ -21,12 +23,13 @@ processed_data <- list()
 for (i in seq_along(file_paths)) {
   file_path <- file_paths[i]
   quarter <- as.Date(quarters[i])  # Convert quarter from Excel to Date format
+  print(file_path)
   
   # Construct the full file path
   full_file_path <- paste0("D:/finance/real_estate/rent/", file_path)
   
   # Load the data
-  df <- read_excel(full_file_path, sheet = "Postcode", skip = 19)
+  df <- read_excel(full_file_path, sheet = sheet[i], skip = skips[i])
   
   # Clean and prepare the data
   cleaned_df <- df %>%
@@ -48,6 +51,8 @@ for (i in seq_along(file_paths)) {
   
   # Append to the list
   processed_data <- append(processed_data, list(cleaned_df))
+  
+  
 }
 
 # Combine all processed data into a single data frame
