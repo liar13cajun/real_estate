@@ -7,7 +7,7 @@ rent_library_path <- "C:/Project_R/Real_estate/real_estate/rent_library.xlsx"
 # Load the directory of files and corresponding quarters from the "directory_try" sheet
 df_library <- read_excel(rent_library_path, sheet = "directory_try")
 
-# Ensure the columns `Name` and `Quarter` exist and extract them
+# Ensure the columns `Name`, `Quarter`, `Skip`, and `Sheet` exist and extract them
 file_paths <- df_library$Name
 quarters <- df_library$Quarter
 skips <- df_library$Skip
@@ -36,7 +36,19 @@ for (i in seq_along(file_paths)) {
     fill("Metro/Rest of State", .direction = "down") %>%
     mutate(Quarter = quarter)  # Assign the quarter from the Excel sheet
   
-  # Filter rows where 'Postcode' is not numeric
+  # Replace '*' with '3' and handle 'n.a.' as NA
+  cleaned_df <- cleaned_df %>%
+    mutate(across(everything(), ~ case_when(
+      . == "*" ~ "3",       # Replace '*' with '3'
+      . == "n.a." ~ NA_character_,  # Replace 'n.a.' with NA
+      TRUE ~ .              # Keep all other values as is
+    )))
+  
+  # Convert columns back to numeric where appropriate
+  cleaned_df <- cleaned_df %>%
+    mutate(across(where(is.character), ~ suppressWarnings(as.numeric(.))))
+  
+  # Filter rows where 'Postcode' is numeric
   cleaned_df <- cleaned_df %>%
     filter(!is.na(as.numeric(Postcode)))
   
@@ -51,8 +63,6 @@ for (i in seq_along(file_paths)) {
   
   # Append to the list
   processed_data <- append(processed_data, list(cleaned_df))
-  
-  
 }
 
 # Combine all processed data into a single data frame
