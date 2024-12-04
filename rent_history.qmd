@@ -1,0 +1,73 @@
+---
+title: "Housing_rent_filter"
+format: html
+editor: visual
+---
+
+## Rent History 
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+library set up
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(writexl)
+library(ggplot2)
+
+```
+
+Set up data frame
+
+```{r}
+
+# Path to the rent library file
+rent_history_path <- "C:/Project_R/Real_estate/real_estate/rent_history_ingested.xlsx"
+
+# Load the directory of files 
+df_rent_history <- read_excel(rent_history_path)
+
+```
+
+For further filter
+
+```{r}
+
+# Filter for postcode 5166
+df_rent_filtered <- df_rent_history %>%
+  filter(postcode == 5166)
+
+# View the first few rows of the filtered data
+head(df_rent_filtered)
+```
+
+Plot the filter data frame
+
+```{r}
+
+# Convert `quarter` to a date format for plotting
+df_rent_filtered <- df_rent_filtered %>%
+  mutate(quarter = as.Date(quarter))
+
+# Create a plot for median rents over time for houses and flats
+ggplot(df_rent_filtered) +
+  # Line for 2BR flats
+  geom_line(aes(x = quarter, y = `2BR_flats_median`, color = "2BR Flats"), na.rm = TRUE) +
+  # Line for 3BR houses
+  geom_line(aes(x = quarter, y = `3BR_houses_median`, color = "3BR Houses"), na.rm = TRUE) +
+  # Line for total flats median
+  geom_line(aes(x = quarter, y = total_flats_median, color = "Total Flats Median"), na.rm = TRUE) +
+  # Line for total houses median
+  geom_line(aes(x = quarter, y = total_houses_median, color = "Total Houses Median"), na.rm = TRUE) +
+  labs(
+    title = "Median Rent Trends Over Time for Postcode 5166",
+    x = "Quarter",
+    y = "Median Rent ($)",
+    color = "Legend"
+  ) +
+  theme_minimal()
+
+```
