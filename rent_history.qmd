@@ -98,7 +98,7 @@ ggplot(df_rent_filtered) +
   # Line for total flats median
   geom_line(aes(x = quarter, y = total_flats_median, color = "Total Flats Median"), na.rm = TRUE) +
   labs(
-    title = "Flats Rent Trends Over Time for Postcode 5166",
+    title = paste0("Median Rent Trends Over Time for Postcode ",interested_postcode),
     x = "Quarter",
     y = "Median Rent ($)",
     color = "Legend"
