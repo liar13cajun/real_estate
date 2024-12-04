@@ -30,8 +30,8 @@ for (i in seq_along(file_paths)) {
   # Load the data
   df <- read_excel(full_file_path, sheet = sheet[i], skip = skips[i])
   
-  # Inspect column names
-  print(colnames(df))
+  # Inspect file paths
+  print(file_paths[i])
   
   # Clean and prepare the data
   cleaned_df <- df %>%
@@ -80,15 +80,5 @@ final_data <- bind_rows(processed_data)
 print(final_data)
 
 
-# Save this data frame to ? 
 
-
-
-# for further filter 
-
-
-# certian subrub sales 
-
-
-# plot graphs
 

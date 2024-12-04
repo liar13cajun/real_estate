@@ -30,18 +30,13 @@ for (i in seq_along(file_paths)) {
   # Load the data
   df <- read_excel(full_file_path, sheet = sheet[i], skip = skips[i])
   
-  #df <- df %>% select(-...28, -...29) # Replace with actual column names if different
-  
-  
-  # Inspect column names
-  print(colnames(df))
+  # Inspect file paths
+  print(file_paths[i])
   
   # Clean and prepare the data
   cleaned_df <- df %>%
     mutate(Quarter = quarter, `Metro/Rest of State` = NA_character_) %>%
     relocate(`Metro/Rest of State`, .before = 1)
-  
-  
   
   # Replace '*' with '3' and handle 'n.a.' as NA, excluding first two columns
   cleaned_df <- cleaned_df %>%
@@ -56,23 +51,19 @@ for (i in seq_along(file_paths)) {
       .fns = ~ suppressWarnings(as.numeric(.))
     ))
   
-  # # Filter rows where 'Postcode' is numeric
-  # cleaned_df <- cleaned_df %>%
-  #   filter(!is.na(as.numeric(Postcode)))
-  
   # Create renaming map for this file
   col_rename_map <- df_col_name %>%
     filter(old_name %in% colnames(cleaned_df)) %>%
     deframe()
-  
   # Rename columns
   cleaned_df <- cleaned_df %>%
     rename_with(~ col_rename_map[.x], .cols = names(col_rename_map))
   
+  cleaned_df <- cleaned_df %>%
+    select(-'Delete1', -'Delete2')
+  
   # Append to the list
   processed_data <- append(processed_data, list(cleaned_df))
-  
-  
   
 }
 
