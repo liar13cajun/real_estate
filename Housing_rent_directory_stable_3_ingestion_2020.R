@@ -55,6 +55,7 @@ for (i in seq_along(file_paths)) {
       .fns = ~ suppressWarnings(as.numeric(.))
     ))
   
+
   # Filter rows where 'Postcode' is numeric
   cleaned_df <- cleaned_df %>%
     filter(!is.na(as.numeric(Postcode)))

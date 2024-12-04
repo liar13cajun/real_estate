@@ -5,7 +5,7 @@ library(readxl)
 rent_library_path <- "C:/Project_R/Real_estate/real_estate/rent_library.xlsx"
 
 # Load the directory of files and corresponding quarters from the "directory_try" sheet
-df_library <- read_excel(rent_library_path, sheet = "directory_try")
+df_library <- read_excel(rent_library_path, sheet = "directory_2024")
 
 # Ensure the columns `Name`, `Quarter`, `Skip`, and `Sheet` exist and extract them
 file_paths <- df_library$Name
@@ -14,7 +14,7 @@ skips <- df_library$Skip
 sheet <- df_library$Sheet
 
 # Load the column renaming map
-df_col_name <- read_excel(rent_library_path, sheet = "rename_2011")
+df_col_name <- read_excel(rent_library_path, sheet = "rename_2024")
 
 # Initialize an empty list to store the processed data frames
 processed_data <- list()
@@ -30,17 +30,18 @@ for (i in seq_along(file_paths)) {
   # Load the data
   df <- read_excel(full_file_path, sheet = sheet[i], skip = skips[i])
   
+  #df <- df %>% select(-...28, -...29) # Replace with actual column names if different
+  
+  
   # Inspect column names
   print(colnames(df))
   
   # Clean and prepare the data
   cleaned_df <- df %>%
-    # Ensure the exact column name matches
-    rename(`Metro/Rest of State` = `Metro/Rest of State`) %>%
-    # Apply fill explicitly to the column
-    fill(`Metro/Rest of State`, .direction = "down") %>%
-    # Add quarter column
-    mutate(Quarter = quarter)
+    mutate(Quarter = quarter, `Metro/Rest of State` = NA_character_) %>%
+    relocate(`Metro/Rest of State`, .before = 1)
+  
+  
   
   # Replace '*' with '3' and handle 'n.a.' as NA, excluding first two columns
   cleaned_df <- cleaned_df %>%
@@ -51,13 +52,13 @@ for (i in seq_along(file_paths)) {
     ))) %>%
     # Convert character columns to numeric, excluding the first two columns
     mutate(across(
-      .cols = -c(1, 2, 31),  # Exclude the first two columns
+      .cols = -c(1, 2, 33),  # Exclude the first two columns
       .fns = ~ suppressWarnings(as.numeric(.))
     ))
   
-  # Filter rows where 'Postcode' is numeric
-  cleaned_df <- cleaned_df %>%
-    filter(!is.na(as.numeric(Postcode)))
+  # # Filter rows where 'Postcode' is numeric
+  # cleaned_df <- cleaned_df %>%
+  #   filter(!is.na(as.numeric(Postcode)))
   
   # Create renaming map for this file
   col_rename_map <- df_col_name %>%
@@ -70,6 +71,9 @@ for (i in seq_along(file_paths)) {
   
   # Append to the list
   processed_data <- append(processed_data, list(cleaned_df))
+  
+  
+  
 }
 
 # Combine all processed data into a single data frame
@@ -79,15 +83,5 @@ final_data <- bind_rows(processed_data)
 print(final_data)
 
 
-# Save this data frame to ? 
 
-
-
-# for further filter 
-
-
-# certian subrub sales 
-
-
-# plot graphs
 

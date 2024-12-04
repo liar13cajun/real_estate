@@ -8,6 +8,9 @@ editor: visual
 
 Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
 
+data from \
+<https://data.sa.gov.au/data/dataset/private-rent-report>
+
 ## Running Code
 
 library set up
@@ -70,4 +73,7 @@ ggplot(df_rent_filtered) +
   ) +
   theme_minimal()
 
+
 ```
+
+after that may be regression and get summary
