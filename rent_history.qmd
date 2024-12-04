@@ -4,11 +4,11 @@ format: html
 editor: visual
 ---
 
-## Rent History 
+## Rent History
 
 Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
 
-data from \
+data from\
 <https://data.sa.gov.au/data/dataset/private-rent-report>
 
 ## Running Code
@@ -39,9 +39,15 @@ For further filter
 
 ```{r}
 
+interested_postcode <- 5166
+
+```
+
+```{r}
+
 # Filter for postcode 5166
 df_rent_filtered <- df_rent_history %>%
-  filter(postcode == 5166)
+  filter(postcode == interested_postcode)
 
 # View the first few rows of the filtered data
 head(df_rent_filtered)
@@ -66,13 +72,66 @@ ggplot(df_rent_filtered) +
   # Line for total houses median
   geom_line(aes(x = quarter, y = total_houses_median, color = "Total Houses Median"), na.rm = TRUE) +
   labs(
-    title = "Median Rent Trends Over Time for Postcode 5166",
+    title = paste0("Median Rent Trends Over Time for Postcode ",interested_postcode),
     x = "Quarter",
     y = "Median Rent ($)",
     color = "Legend"
   ) +
   theme_minimal()
 
+
+```
+
+```{r}
+# Convert `quarter` to a date format for plotting
+df_rent_filtered <- df_rent_filtered %>%
+  mutate(quarter = as.Date(quarter))
+
+# Create a plot for median rents for flats (1BR, 2BR, 3BR, Total Flats)
+ggplot(df_rent_filtered) +
+  # Line for 1BR flats
+  geom_line(aes(x = quarter, y = `1BR_flats_median`, color = "1BR Flats"), na.rm = TRUE) +
+  # Line for 2BR flats
+  geom_line(aes(x = quarter, y = `2BR_flats_median`, color = "2BR Flats"), na.rm = TRUE) +
+  # Line for 3BR flats
+  geom_line(aes(x = quarter, y = `3BR_flats_median`, color = "3BR Flats"), na.rm = TRUE) +
+  # Line for total flats median
+  geom_line(aes(x = quarter, y = total_flats_median, color = "Total Flats Median"), na.rm = TRUE) +
+  labs(
+    title = "Flats Rent Trends Over Time for Postcode 5166",
+    x = "Quarter",
+    y = "Median Rent ($)",
+    color = "Legend"
+  ) +
+  theme_minimal()
+
+```
+
+```{r}
+
+# Convert `quarter` to a date format for plotting
+df_rent_filtered <- df_rent_filtered %>%
+  mutate(quarter = as.Date(quarter))
+
+# Create a plot for median rents for houses (1BR, 2BR, 3BR, 4BR, Total Houses)
+ggplot(df_rent_filtered) +
+  # Line for 1BR houses
+  geom_line(aes(x = quarter, y = `1BR_houses_median`, color = "1BR Houses"), na.rm = TRUE) +
+  # Line for 2BR houses
+  geom_line(aes(x = quarter, y = `2BR_houses_median`, color = "2BR Houses"), na.rm = TRUE) +
+  # Line for 3BR houses
+  geom_line(aes(x = quarter, y = `3BR_houses_median`, color = "3BR Houses"), na.rm = TRUE) +
+  # Line for 4BR houses
+  geom_line(aes(x = quarter, y = `4BR_houses_median`, color = "4BR Houses"), na.rm = TRUE) +
+  # Line for total houses median
+  geom_line(aes(x = quarter, y = total_houses_median, color = "Total Houses Median"), na.rm = TRUE) +
+  labs(
+    title = "Houses Rent Trends Over Time for Postcode 5166",
+    x = "Quarter",
+    y = "Median Rent ($)",
+    color = "Legend"
+  ) +
+  theme_minimal()
 
 ```
 
