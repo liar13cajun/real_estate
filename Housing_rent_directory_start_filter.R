@@ -1,5 +1,7 @@
 library(tidyverse)
 library(readxl)
+library(writexl)
+
 
 # Path to the rent library file
 rent_library_path <- "C:/Project_R/Real_estate/real_estate/rent_library.xlsx"
@@ -23,7 +25,6 @@ processed_data <- list()
 for (i in seq_along(file_paths)) {
   file_path <- file_paths[i]
   quarter <- as.Date(quarters[i])  # Convert quarter from Excel to Date format
-  print(file_path)
   
   # Construct the full file path
   full_file_path <- paste0("D:/finance/real_estate/rent/", file_path)
@@ -31,22 +32,30 @@ for (i in seq_along(file_paths)) {
   # Load the data
   df <- read_excel(full_file_path, sheet = sheet[i], skip = skips[i])
   
+  # Inspect column names
+  print(colnames(df))
+  
   # Clean and prepare the data
   cleaned_df <- df %>%
-    fill("Metro/Rest of State", .direction = "down") %>%
-    mutate(Quarter = quarter)  # Assign the quarter from the Excel sheet
+    # Ensure the exact column name matches
+    rename(`Metro/Rest of State` = `Metro/Rest of State`) %>%
+    # Apply fill explicitly to the column
+    fill(`Metro/Rest of State`, .direction = "down") %>%
+    # Add quarter column
+    mutate(Quarter = quarter)
   
-  # Replace '*' with '3' and handle 'n.a.' as NA
+  # Replace '*' with '3' and handle 'n.a.' as NA, excluding first two columns
   cleaned_df <- cleaned_df %>%
-    mutate(across(everything(), ~ case_when(
-      . == "*" ~ "3",       # Replace '*' with '3'
-      . == "n.a." ~ NA_character_,  # Replace 'n.a.' with NA
-      TRUE ~ .              # Keep all other values as is
-    )))
-  
-  # Convert columns back to numeric where appropriate
-  cleaned_df <- cleaned_df %>%
-    mutate(across(where(is.character), ~ suppressWarnings(as.numeric(.))))
+    mutate(across(where(is.character), ~ case_when(
+      . == "*" ~ "3",
+      . == "n.a." ~ NA_character_,
+      TRUE ~ .
+    ))) %>%
+    # Convert character columns to numeric, excluding the first two columns
+    mutate(across(
+      .cols = -c(1, 2, 31),  # Exclude the first two columns
+      .fns = ~ suppressWarnings(as.numeric(.))
+    ))
   
   # Filter rows where 'Postcode' is numeric
   cleaned_df <- cleaned_df %>%
@@ -70,3 +79,20 @@ final_data <- bind_rows(processed_data)
 
 # Display the combined data
 print(final_data)
+
+
+# Save this data frame to ? 
+write_xlsx( 
+  final_data,"C:/Project_R/Real_estate/real_estate/rent_history_ingested.xlsx", 
+  col_names = TRUE, 
+  format_headers = TRUE)
+
+
+# for further filter 
+
+
+# certian subrub sales 
+
+
+# plot graphs
+
