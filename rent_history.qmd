@@ -39,7 +39,7 @@ For further filter
 
 ```{r}
 
-interested_postcode <- 5166
+interested_postcode <- 5043
 
 ```
 
@@ -56,23 +56,31 @@ head(df_rent_filtered)
 Plot the filter data frame
 
 ```{r}
-
 # Convert `quarter` to a date format for plotting
 df_rent_filtered <- df_rent_filtered %>%
   mutate(quarter = as.Date(quarter))
 
+```
+
+HOUSE
+
+```{r}
+
+
 # Create a plot for median rents over time for houses and flats
 ggplot(df_rent_filtered) +
-  # Line for 2BR flats
-  geom_line(aes(x = quarter, y = `2BR_flats_median`, color = "2BR Flats"), na.rm = TRUE) +
-  # Line for 3BR houses
-  geom_line(aes(x = quarter, y = `3BR_houses_median`, color = "3BR Houses"), na.rm = TRUE) +
-  # Line for total flats median
-  geom_line(aes(x = quarter, y = total_flats_median, color = "Total Flats Median"), na.rm = TRUE) +
-  # Line for total houses median
-  geom_line(aes(x = quarter, y = total_houses_median, color = "Total Houses Median"), na.rm = TRUE) +
+  # Points for 1BR flats
+  geom_point(aes(x = quarter, y = `1BR_houses_median`, color = "1BR Flats"), na.rm = TRUE) +
+  # Points for 2BR flats
+  geom_point(aes(x = quarter, y = `2BR_houses_median`, color = "2BR Flats"), na.rm = TRUE) +
+  # Points for 3BR houses
+  geom_point(aes(x = quarter, y = `3BR_houses_median`, color = "3BR Houses"), na.rm = TRUE) +
+  # Points for 4BR houses
+  geom_point(aes(x = quarter, y = `4BR_houses_median`, color = "4BR Houses"), na.rm = TRUE) +
+  # Points for total houses median
+  geom_point(aes(x = quarter, y = total_houses_median, color = "Total Houses Median"), na.rm = TRUE) +
   labs(
-    title = paste0("Median Rent Trends Over Time for Postcode ",interested_postcode),
+    title = paste0("Median House Rent Trends Over Time for Postcode ", interested_postcode),
     x = "Quarter",
     y = "Median Rent ($)",
     color = "Legend"
@@ -83,25 +91,93 @@ ggplot(df_rent_filtered) +
 ```
 
 ```{r}
-# Convert `quarter` to a date format for plotting
-df_rent_filtered <- df_rent_filtered %>%
-  mutate(quarter = as.Date(quarter))
 
 # Create a plot for median rents for flats (1BR, 2BR, 3BR, Total Flats)
 ggplot(df_rent_filtered) +
   # Line for 1BR flats
-  geom_line(aes(x = quarter, y = `1BR_flats_median`, color = "1BR Flats"), na.rm = TRUE) +
+  geom_point(aes(x = quarter, y = `1BR_flats_median`, color = "1BR Flats"), na.rm = TRUE) +
   # Line for 2BR flats
-  geom_line(aes(x = quarter, y = `2BR_flats_median`, color = "2BR Flats"), na.rm = TRUE) +
+  geom_point(aes(x = quarter, y = `2BR_flats_median`, color = "2BR Flats"), na.rm = TRUE) +
   # Line for 3BR flats
-  geom_line(aes(x = quarter, y = `3BR_flats_median`, color = "3BR Flats"), na.rm = TRUE) +
-  # Line for total flats median
-  geom_line(aes(x = quarter, y = total_flats_median, color = "Total Flats Median"), na.rm = TRUE) +
+  geom_point(aes(x = quarter, y = `3BR_flats_median`, color = "3BR Flats"), na.rm = TRUE) +
+  # geom_point for total flats median
+  geom_point(aes(x = quarter, y = total_flats_median, color = "Total Flats Median"), na.rm = TRUE) +
   labs(
-    title = paste0("Median Rent Trends Over Time for Postcode ",interested_postcode),
+    title = paste0("Median Flat Rent Trends Over Time for Postcode ",interested_postcode),
     x = "Quarter",
     y = "Median Rent ($)",
     color = "Legend"
+  ) +
+  theme_minimal()
+
+```
+
+FLAT
+
+```{r}
+
+# Trend line
+
+# Create a plot for median rents over time for houses and flats
+ggplot(df_rent_filtered) +
+  # Points for 1BR flats
+  geom_point(aes(x = quarter, y = `1BR_houses_median`, color = "1BR Houses"), na.rm = TRUE) +
+  # Trend line for 1BR flats
+  geom_smooth(aes(x = quarter, y = `1BR_houses_median`, color = "1BR Houses"), method = "loess", se = FALSE, na.rm = TRUE) +
+  
+  # Points for 2BR flats
+  geom_point(aes(x = quarter, y = `2BR_houses_median`, color = "2BR Houses"), na.rm = TRUE) +
+  # Trend line for 2BR flats
+  geom_smooth(aes(x = quarter, y = `2BR_houses_median`, color = "2BR Houses"), method = "loess", se = FALSE, na.rm = TRUE) +
+  
+  # Points for 3BR houses
+  geom_point(aes(x = quarter, y = `3BR_houses_median`, color = "3BR Houses"), na.rm = TRUE) +
+  # Trend line for 3BR houses
+  geom_smooth(aes(x = quarter, y = `3BR_houses_median`, color = "3BR Houses"), method = "loess", se = FALSE, na.rm = TRUE) +
+  
+  # Points for 4BR houses
+  # geom_point(aes(x = quarter, y = `4BR_houses_median`, color = "4BR Houses"), na.rm = TRUE) +
+  # Trend line for 4BR houses
+  # geom_smooth(aes(x = quarter, y = `4BR_houses_median`, color = "4BR Houses"), method = "lm", se = FALSE, na.rm = TRUE) +
+  
+  # Points for total houses median
+  geom_point(aes(x = quarter, y = total_houses_median, color = "Total Houses Median"), na.rm = TRUE) +
+  # Trend line for total houses median
+  geom_smooth(aes(x = quarter, y = total_houses_median, color = "Total Houses Median"), method = "loess", se = FALSE, na.rm = TRUE) +
+  
+  labs(
+    title = paste0("Median House Rent Trends Over Time for Postcode ", interested_postcode),
+    x = "Quarter",
+    y = "Median Rent ($)",
+    color = "Legend"
+  ) +
+  theme_minimal()
+
+
+```
+
+after that may be regression and get summary
+
+add map
+
+```{r}
+
+model_2BR <- lm(`2BR_houses_median` ~ quarter, data = df_rent_filtered)
+summary(model_2BR)
+plot(model_2BR)  # Diagnostic plots
+influential <- cooks.distance(model_2BR) > (4 / nrow(df_rent_filtered))
+df_rent_filtered_cleaned <- df_rent_filtered[!influential, ]
+
+```
+
+```{r}
+ggplot(df_rent_filtered, aes(x = quarter, y = `2BR_houses_median`)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE, color = "blue") +
+  labs(
+    title = "Regression of 2BR House Median Rent Over Time",
+    x = "Quarter",
+    y = "Median Rent ($)"
   ) +
   theme_minimal()
 
@@ -109,30 +185,75 @@ ggplot(df_rent_filtered) +
 
 ```{r}
 
-# Convert `quarter` to a date format for plotting
-df_rent_filtered <- df_rent_filtered %>%
-  mutate(quarter = as.Date(quarter))
+```
 
-# Create a plot for median rents for houses (1BR, 2BR, 3BR, 4BR, Total Houses)
-ggplot(df_rent_filtered) +
-  # Line for 1BR houses
-  geom_line(aes(x = quarter, y = `1BR_houses_median`, color = "1BR Houses"), na.rm = TRUE) +
-  # Line for 2BR houses
-  geom_line(aes(x = quarter, y = `2BR_houses_median`, color = "2BR Houses"), na.rm = TRUE) +
-  # Line for 3BR houses
-  geom_line(aes(x = quarter, y = `3BR_houses_median`, color = "3BR Houses"), na.rm = TRUE) +
-  # Line for 4BR houses
-  geom_line(aes(x = quarter, y = `4BR_houses_median`, color = "4BR Houses"), na.rm = TRUE) +
-  # Line for total houses median
-  geom_line(aes(x = quarter, y = total_houses_median, color = "Total Houses Median"), na.rm = TRUE) +
-  labs(
-    title = "Houses Rent Trends Over Time for Postcode 5166",
-    x = "Quarter",
-    y = "Median Rent ($)",
-    color = "Legend"
-  ) +
-  theme_minimal()
+```{r}
+model_mult <- lm(`2BR_houses_median` ~ quarter + `1BR_houses_median` + `3BR_houses_median`, data = df_rent_filtered)
+summary(model_mult)
 
 ```
 
-after that may be regression and get summary
+Forecast
+
+```{r}
+df_rent_filtered <- df_rent_filtered %>%
+  mutate(quarter = as.Date(quarter))
+
+
+```
+
+```{r}
+model_2BR <- lm(`2BR_houses_median` ~ quarter, data = df_rent_filtered)
+summary(model_2BR)
+
+
+```
+
+```{r}
+future_quarters <- data.frame(
+  quarter = seq.Date(from = as.Date("2025-01-01"), to = as.Date("2025-12-31"), by = "quarter")
+)
+
+
+```
+
+```{r}
+future_quarters$forecasted_rent <- predict(model_2BR, newdata = future_quarters)
+
+
+```
+
+```{r}
+df_combined <- df_rent_filtered %>%
+  select(quarter, `2BR_houses_median`) %>%
+  rename(rent = `2BR_houses_median`) %>%
+  mutate(type = "Historical") %>%
+  bind_rows(
+    future_quarters %>%
+      rename(rent = forecasted_rent) %>%
+      mutate(type = "Forecast")
+  )
+
+```
+
+```{r}
+ggplot(df_combined, aes(x = quarter, y = rent, color = type)) +
+  geom_point() +
+  geom_smooth(data = df_combined %>% filter(type == "Historical"), 
+              method = "lm", se = FALSE, color = "blue") +
+  labs(
+    title = "2BR House Median Rent Trends with Forecast for 2025",
+    x = "Quarter",
+    y = "Median Rent ($)",
+    color = "Type"
+  ) +
+  scale_color_manual(values = c("Historical" = "blue", "Forecast" = "red")) +
+  theme_minimal()
+
+
+```
+
+```{r}
+future_quarters
+
+```
