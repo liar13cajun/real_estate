@@ -257,3 +257,7 @@ ggplot(df_combined, aes(x = quarter, y = rent, color = type)) +
 future_quarters
 
 ```
+
+Include map compare % change to last quarter
+
+Put current rent on map
