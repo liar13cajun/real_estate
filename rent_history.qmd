@@ -70,9 +70,9 @@ HOUSE
 # Create a plot for median rents over time for houses and flats
 ggplot(df_rent_filtered) +
   # Points for 1BR flats
-  geom_point(aes(x = quarter, y = `1BR_houses_median`, color = "1BR Flats"), na.rm = TRUE) +
+  geom_point(aes(x = quarter, y = `1BR_houses_median`, color = "1BR House"), na.rm = TRUE) +
   # Points for 2BR flats
-  geom_point(aes(x = quarter, y = `2BR_houses_median`, color = "2BR Flats"), na.rm = TRUE) +
+  geom_point(aes(x = quarter, y = `2BR_houses_median`, color = "2BR House"), na.rm = TRUE) +
   # Points for 3BR houses
   geom_point(aes(x = quarter, y = `3BR_houses_median`, color = "3BR Houses"), na.rm = TRUE) +
   # Points for 4BR houses

@@ -1,0 +1,35 @@
+---
+title: "new_rent_history"
+format: html
+editor: visual
+---
+
+## Data source
+
+data from\
+<https://data.sa.gov.au/data/dataset/private-rent-report>
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+question to answer
+
+projected time whats the price
+
+for that postcode
+
+for that br size
+
+for house or flat
