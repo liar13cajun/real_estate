@@ -45,7 +45,7 @@ AUS_pc_shp <- AUS_pc_shp %>% filter(STE_NAME21 == "South Australia")
 Need to add postcode back to the lsg excel
 
 ```{r}
-df <- read_excel("D:/finance/real_estate/lsg_stats_2024_q3.xlsx")
+df <- read_excel("D:/finance/real_estate/lsg_stats_2024_q4.xlsx")
 df$PostCode <- as.character(df$PostCode)
 colnames(df)[6] <- "median_value"
 df$Suburb <- tolower(df$Suburb)
@@ -62,7 +62,7 @@ map_data2 <- AUS_pc_shp %>%  inner_join(df, by = c('SAL_NAME21' = 'Suburb'))
 ```
 
 ```{r}
-value_interested <- 2000000
+value_interested <- 600000
 ```
 
 ```{r fig.height=15, fig.width=15}

@@ -9,7 +9,7 @@ rent_history_path <- "C:/Project_R/Real_estate/real_estate/rent_history_ingested
 df_rent_history <- read_excel(rent_history_path)
 
 # Specify the postcode of interest
-interested_postcode <- 5166
+interested_postcode <- 5118
 
 # Filter the data for the specified postcode
 df_rent_filtered <- df_rent_history %>%
@@ -67,7 +67,7 @@ ggplot(df_rent_filtered) +
 
 
 # Define the column name for the dependent variable as a string
-interested_BR <- "3BR_houses_median"
+interested_BR <- "1BR_houses_median"
 
 # Dynamically create the formula for the model
 model_formula <- reformulate("quarter", response = interested_BR)
