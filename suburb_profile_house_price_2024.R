@@ -32,6 +32,7 @@ print(df_merged)
 
 # Filter data for Gawler
 df_gawler <- df_merged %>%
+  select(-starts_with("Sales")) %>% 
   filter(City == "GAWLER") %>%
   pivot_longer(cols = starts_with("Median"), names_to = "Quarter", values_to = "Median_Price")
 
@@ -56,3 +57,32 @@ ggplot(df_gawler, aes(x = Quarter, y = Median_Price, group = 1)) +
        y = "Median Price") +
   theme_minimal() +
   scale_y_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE))
+
+
+# For sales data plotting, you can filter and pivot similarly, as needed:
+df_gawler_sales <- df_merged %>%
+  select(-starts_with("Median")) %>% 
+  filter(City == "GAWLER") %>%
+  pivot_longer(cols = starts_with("Sales"), names_to = "Quarter", values_to = "Sales_Amount")
+
+# Clean up sales quarter labels similarly
+df_gawler_sales$Quarter <- recode(df_gawler_sales$Quarter,
+                                  "Sales 1Q 2023" = "Q1 2023",
+                                  "Sales 2Q 2023" = "Q2 2023",
+                                  "Sales 3Q 2023" = "Q3 2023",
+                                  "Sales 4Q 2023" = "Q4 2023",
+                                  "Sales 1Q 2024" = "Q1 2024",
+                                  "Sales 2Q 2024" = "Q2 2024",
+                                  "Sales 3Q 2024" = "Q3 2024",
+                                  "Sales 4Q 2024" = "Q4 2024")
+
+# Plot the sales trend for Gawler
+ggplot(df_gawler_sales, aes(x = Quarter, y = Sales_Amount, group = 1)) +
+  geom_line(color = "green", size = 1) +
+  geom_point(color = "orange", size = 3) +
+  labs(title = "Sales Trend for Gawler",
+       x = "Quarter",
+       y = "Sales Amount") +
+  theme_minimal() +
+  scale_y_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE))
+
