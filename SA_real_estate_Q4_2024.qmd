@@ -4,7 +4,7 @@ format: html
 editor: visual
 ---
 
-## Real Estate SA (Q3 2024)
+## Real Estate SA (Q4 2024)
 
 From ABS Data, use SF and other to make analysis
 
@@ -62,7 +62,7 @@ map_data2 <- AUS_pc_shp %>%  inner_join(df, by = c('SAL_NAME21' = 'Suburb'))
 ```
 
 ```{r}
-value_interested <- 600000
+value_interested <- 450000
 ```
 
 ```{r fig.height=15, fig.width=15}
