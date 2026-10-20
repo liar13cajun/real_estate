@@ -1,0 +1,78 @@
+---
+title: "Untitled"
+format: html
+---
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(writexl)
+library(ggplot2)
+library(openxlsx)
+library(dplyr)
+library(sf)
+```
+
+From Data SAhttps://data.sa.gov.au/data/dataset/metro-median-house-sales
+
+https://www.valuergeneral.sa.gov.au/News-and-Publications/publisheddataandstatistics
+
+```{r}
+
+AUS_pc_shp <- read_sf("D:/finance/real_estate/SAL_2021_AUST_GDA2020_SHP","SAL_2021_AUST_GDA2020")
+AUS_pc_shp$SAL_NAME21 <- tolower(AUS_pc_shp$SAL_NAME21)
+AUS_pc_shp$SAL_NAME21 <- gsub("\\s*\\([^\\)]+\\)","",as.character(AUS_pc_shp$SAL_NAME21))
+AUS_pc_shp <- AUS_pc_shp %>% filter(STE_NAME21 == "South Australia")
+```
+
+```{r}
+
+df_postcode <- read_excel("D:/finance/real_estate/lsg_stats_2025_q3.xlsx")
+
+df_postcode <- df_postcode %>%  select(Suburb,PostCode)
+```
+
+```{r}
+df <- read_excel("D:/finance/real_estate/lsg_stats_2026_3q.xlsx")
+
+df <- left_join(df,df_postcode,by = "Suburb")
+
+df$PostCode <- as.character(df$PostCode)
+colnames(df)[6] <- "median_value"
+df$Suburb <- tolower(df$Suburb)
+```
+```{r}
+map_data <- AUS_pc_shp %>%  inner_join(df, by = c('SAL_CODE21' = 'PostCode'))
+map_data2 <- AUS_pc_shp %>%  inner_join(df, by = c('SAL_NAME21' = 'Suburb'))
+
+```
+```{r}
+value_interested <- 850000
+```
+```{r}
+ggplot() + 
+  geom_sf(data = map_data2, aes(fill = median_value < value_interested), color = "black")+theme_bw()+theme(
+    panel.grid.major = element_blank())
+```
+
+```{r}
+#count number of suburb below value interested
+d <- df$median_value
+d <- d[!is.na(d)]
+c <- which(d <= value_interested)
+length(c)
+```
+```{r}
+# median sale price last quarter
+ggplot() + 
+  geom_sf(data = map_data2, aes(fill = median_value < value_interested), color = "black")+theme_bw()+theme(
+    panel.grid.major = element_blank()) + coord_sf(xlim = c(138.45,138.65),ylim=c(-34.951,-35.169)) +geom_sf_text(data = map_data2, aes(label = SAL_NAME21), size=4)
+```
+
+```{r}
+
+# median sale price last quarter
+ggplot() + 
+  geom_sf(data = map_data2, aes(fill = median_value < value_interested), color = "black")+theme_bw()+theme(
+    panel.grid.major = element_blank()) + coord_sf(xlim = c(138.46,138.65),ylim=c(-34.97,-35.169)) +geom_sf_text(data = map_data2, aes(label = SAL_NAME21), size=4)
+```
